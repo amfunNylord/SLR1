@@ -1,9 +1,4 @@
-<Z> - <E> =
-<E> - <E> + <T>
-<E> - <T>
-<T> - <T> * <F>
-<T> - <F>
-<F> - - <F>
-<F> - ( <E> )
-<F> - id
-<F> - num
+<S> - real <idlist> =
+<idlist> - <idlist> D <id>
+<idlist> - <id>
+<id> - ABC

@@ -352,8 +352,13 @@ std::vector<std::string> SLRGenerator::GetTableContent(const std::string& el)
 				}
 				else
 				{
-					result.emplace_back(m_grammar[i].second[j + 1]);
-					std::string el = GetElFromGrammar(m_grammar[i].second[j + 1]);
+					std::string elem = m_grammar[i].second[j + 1];
+					if (elem[0] == '=')
+					{
+						elem += 'R' + std::to_string(i);
+					}
+					result.emplace_back(elem);
+					std::string el = GetElFromGrammar(elem);
 					if (IsNonTerminal(el))
 					{
 						std::vector<std::string> followSet = GetFirstFollowSet(el);
