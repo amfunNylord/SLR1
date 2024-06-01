@@ -1,4 +1,3 @@
-<S> - real <idlist> =
-<idlist> - <idlist> D <id>
-<idlist> - <id>
-<id> - ABC
+<Z> - <S> =
+<S> - a <S> b
+<S> - e

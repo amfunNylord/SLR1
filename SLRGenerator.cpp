@@ -59,6 +59,10 @@ SLRGenerator::SLRGenerator(std::ifstream& inputFile)
 		std::string tempLine;
 		while (ss >> tempLine)
 		{
+			if (tempLine == "e")
+			{
+				continue;
+			}
 			if (uniqueSymbols.find(tempLine) == uniqueSymbols.end() && tempLine != "=")
 			{
 				uniqueSymbols.insert(tempLine);
@@ -87,7 +91,7 @@ void SLRGenerator::FillTable()
 	size_t column = 2;
 	while (true)
 	{
-		if (column == m_tableWidth - 1 && row == m_table.size() - 1)
+		if (column == m_tableWidth - 1 && row == m_table.size() - 1 && q.empty())
 		{
 			break;
 		}
@@ -147,7 +151,30 @@ void SLRGenerator::AddStartingRule()
 		{
 			if (el == m_table[0][i])
 			{
-				m_table[1][i] += e;
+				
+				size_t l = 0;
+				std::string newEl;
+				while (!isdigit(e[l]) && l < e.size())
+				{
+					l++;
+				}
+				while (isdigit(e[l]) && l < e.size())
+				{
+					l++;
+				}
+				while (l < e.size())
+				{
+					newEl += e[l];
+					l++;
+				}
+				if (!newEl.empty())
+				{
+					m_table[1][i] += newEl;
+				}
+				else
+				{
+					m_table[1][i] += e;
+				}
 				break;
 			}
 		}
@@ -279,9 +306,13 @@ std::vector<std::string> SLRGenerator::GetFirstFollowSet(const std::string& nont
 		{
 			continue;
 		}
-		res.emplace_back(m_grammar[i].second[0]);
-
+		
 		std::string el = GetElFromGrammar(m_grammar[i].second[0]);
+
+		if (el[0] != 'e')
+		{
+			res.emplace_back(m_grammar[i].second[0]);
+		}
 
 		if (IsNonTerminal(el))
 		{
@@ -291,6 +322,20 @@ std::vector<std::string> SLRGenerator::GetFirstFollowSet(const std::string& nont
 			}
 			std::vector<std::string> res1 = GetFirstFollowSet(el);
 			res.insert(res.end(), res1.begin(), res1.end());
+		}
+		else if (el == "e")
+		{
+			std::vector<std::string> result1 = GetNextContentAfterLastInLine(m_grammar[i].first);
+
+			for (size_t k = 0; k < result1.size(); k++)
+			{
+				if (result1[k][result1[k].size() - 1] == 'R')
+				{
+					result1[k] += std::to_string(i);
+				}
+			}
+
+			res.insert(res.end(), result1.begin(), result1.end());
 		}
 	}
 

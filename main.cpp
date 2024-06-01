@@ -19,6 +19,8 @@ int main(int argc, char* argv[])
     SLRProgram program;
 
     // нельзя использовать - терминалы цифры
+
+    //todo: обработку с пустыми символами
     try 
     {
         program.Run(inputFile, outputFile);

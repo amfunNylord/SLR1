@@ -1,8 +1,6 @@
-;<S>;<idlist>;<id>;real;D;ABC;=;
-begin;ok;;;real01;;;;
-real01;;<idlist>02<idlist>11;<id>21;;;ABC31;;
-<idlist>02<idlist>11;;;;;D12;;R0;
-<id>21;;;;;R2;;R2;
-ABC31;;;;;R3;;R3;
-D12;;;<id>13;;;ABC31;;
-<id>13;;;;;R1;;R1;
+;<Z>;<S>;a;b;=;
+begin;ok;<S>01;a11;R2;R2;
+<S>01;;;;;R0;
+a11;;<S>12;a11;R2;R2;
+<S>12;;;;b13;;
+b13;;;;R1;R1;
