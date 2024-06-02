@@ -138,7 +138,9 @@ void SLRGenerator::AddStartingRule()
 
 	std::string firstSymbol = m_grammar[0].second[0];
 
-	std::vector<std::string> firstFollowSet = GetFirstFollowSet(firstSymbol, firstSymbol);
+	std::vector<std::string> fromWhatElementStarted = { firstSymbol };
+
+	std::vector<std::string> firstFollowSet = GetFirstFollowSet(firstSymbol, fromWhatElementStarted);
 
 	// Копирование элементов вектора во множество
 	std::set<std::string> uniqueSet(firstFollowSet.begin(), firstFollowSet.end());
@@ -254,6 +256,18 @@ bool SLRGenerator::IsElAlreadyInTable(const std::string& el)
 	return false;
 }
 
+bool SLRGenerator::IsInVector(const std::string& el, const std::vector<std::string>& vec)
+{
+	for (size_t i = 0; i < vec.size(); i++)
+	{
+		if (vec[i] == el)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 std::string SLRGenerator::GetElIfEmptySymbol(const std::string& el)
 {
 	for (size_t i = 0; i < m_grammar.size(); i++)
@@ -317,7 +331,7 @@ std::string SLRGenerator::GetPuttingEl(const std::string& el)
 }
 
 // нужно передавать вектор уже пройденных элементов
-std::vector<std::string> SLRGenerator::GetFirstFollowSet(const std::string& element, const std::string& fromWhatElementStarted)
+std::vector<std::string> SLRGenerator::GetFirstFollowSet(const std::string& element, std::vector<std::string>& fromWhatElementStarted)
 {
 	std::vector<std::string> res;
 
@@ -339,11 +353,12 @@ std::vector<std::string> SLRGenerator::GetFirstFollowSet(const std::string& elem
 
 		if (IsNonTerminal(el))
 		{
-			if (m_grammar[i].second[0] == fromWhatElementStarted)
+			if (IsInVector(m_grammar[i].second[0], fromWhatElementStarted))
 			{
 				continue;
 			}
-			std::vector<std::string> res1 = GetFirstFollowSet(m_grammar[i].second[0], m_grammar[i].second[0]);
+			fromWhatElementStarted.emplace_back(m_grammar[i].second[0]);
+			std::vector<std::string> res1 = GetFirstFollowSet(m_grammar[i].second[0], fromWhatElementStarted);
 			res.insert(res.end(), res1.begin(), res1.end());
 		}
 		else if (el == "e")
@@ -433,7 +448,8 @@ std::vector<std::string> SLRGenerator::GetTableContent(const std::string& el)
 					std::string el = GetElFromGrammar(elem);
 					if (IsNonTerminal(el))
 					{
-						std::vector<std::string> followSet = GetFirstFollowSet(elem, elem);
+						std::vector<std::string> fromWhatElementStarted = { elem };
+						std::vector<std::string> followSet = GetFirstFollowSet(elem, fromWhatElementStarted);
 						result.insert(result.begin(), followSet.begin(), followSet.end());
 					}
 				}
