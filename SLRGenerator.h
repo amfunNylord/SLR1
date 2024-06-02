@@ -18,9 +18,11 @@ private:
 
 	bool IsElAlreadyInTable(const std::string& el);
 
+	std::string GetElIfEmptySymbol(const std::string& el);
+
 	std::string GetElFromGrammar(const std::string& nonTerminal);
 	std::string GetPuttingEl(const std::string& el);
-	std::vector<std::string> GetFirstFollowSet(const std::string& nonterminal);
+	std::vector<std::string> GetFirstFollowSet(const std::string& nonterminal, const std::string& fromWhatElementStarted);
 	std::vector<std::string> GetSymbolsFromEl(const std::string& el);
 	std::vector<std::string> GetTableContent(const std::string& el);
 	std::vector<std::string> GetNextContentAfterLastInLine(const std::string& el);

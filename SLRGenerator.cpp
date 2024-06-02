@@ -138,9 +138,13 @@ void SLRGenerator::AddStartingRule()
 
 	std::string firstSymbol = m_grammar[0].second[0];
 
-	std::string nonTerminal = GetElFromGrammar(firstSymbol);
+	std::vector<std::string> firstFollowSet = GetFirstFollowSet(firstSymbol, firstSymbol);
 
-	std::vector<std::string> firstFollowSet = GetFirstFollowSet(nonTerminal);
+	// Копирование элементов вектора во множество
+	std::set<std::string> uniqueSet(firstFollowSet.begin(), firstFollowSet.end());
+
+	// Копирование уникальных элементов обратно в вектор
+	firstFollowSet.assign(uniqueSet.begin(), uniqueSet.end());
 
 	firstFollowSet.insert(firstFollowSet.begin(), firstSymbol);
 
@@ -250,6 +254,22 @@ bool SLRGenerator::IsElAlreadyInTable(const std::string& el)
 	return false;
 }
 
+std::string SLRGenerator::GetElIfEmptySymbol(const std::string& el)
+{
+	for (size_t i = 0; i < m_grammar.size(); i++)
+	{
+		for (size_t j = 0; j < m_grammar[i].second.size(); j++)
+		{
+			if (m_grammar[i].second[j] == el)
+			{
+				return m_grammar[i].second[j + 1] + 'R';
+			}
+		}
+	}
+
+	return std::string();
+}
+
 std::string SLRGenerator::GetElFromGrammar(const std::string& nonTerminal)
 {
 	std::string res;
@@ -296,9 +316,12 @@ std::string SLRGenerator::GetPuttingEl(const std::string& el)
 	return result;
 }
 
-std::vector<std::string> SLRGenerator::GetFirstFollowSet(const std::string& nonterminal)
+// нужно передавать вектор уже пройденных элементов
+std::vector<std::string> SLRGenerator::GetFirstFollowSet(const std::string& element, const std::string& fromWhatElementStarted)
 {
 	std::vector<std::string> res;
+
+	std::string nonterminal = GetElFromGrammar(element);
 
 	for (size_t i = 0; i < m_grammar.size(); i++)
 	{
@@ -316,16 +339,16 @@ std::vector<std::string> SLRGenerator::GetFirstFollowSet(const std::string& nont
 
 		if (IsNonTerminal(el))
 		{
-			if (el == m_grammar[i].first)
+			if (m_grammar[i].second[0] == fromWhatElementStarted)
 			{
 				continue;
 			}
-			std::vector<std::string> res1 = GetFirstFollowSet(el);
+			std::vector<std::string> res1 = GetFirstFollowSet(m_grammar[i].second[0], m_grammar[i].second[0]);
 			res.insert(res.end(), res1.begin(), res1.end());
 		}
 		else if (el == "e")
 		{
-			std::vector<std::string> result1 = GetNextContentAfterLastInLine(m_grammar[i].first);
+			/*std::vector<std::string> result1 = GetNextContentAfterLastInLine(m_grammar[i].first);
 
 			for (size_t k = 0; k < result1.size(); k++)
 			{
@@ -335,7 +358,11 @@ std::vector<std::string> SLRGenerator::GetFirstFollowSet(const std::string& nont
 				}
 			}
 
-			res.insert(res.end(), result1.begin(), result1.end());
+			res.insert(res.end(), result1.begin(), result1.end());*/
+
+			std::string result1 = GetElIfEmptySymbol(element);
+			result1 += std::to_string(i);
+			res.emplace_back(result1);
 		}
 	}
 
@@ -406,7 +433,7 @@ std::vector<std::string> SLRGenerator::GetTableContent(const std::string& el)
 					std::string el = GetElFromGrammar(elem);
 					if (IsNonTerminal(el))
 					{
-						std::vector<std::string> followSet = GetFirstFollowSet(el);
+						std::vector<std::string> followSet = GetFirstFollowSet(elem, elem);
 						result.insert(result.begin(), followSet.begin(), followSet.end());
 					}
 				}
