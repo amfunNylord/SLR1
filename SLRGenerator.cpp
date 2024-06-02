@@ -268,20 +268,31 @@ bool SLRGenerator::IsInVector(const std::string& el, const std::vector<std::stri
 	return false;
 }
 
-std::string SLRGenerator::GetElIfEmptySymbol(const std::string& el)
+std::vector<std::string> SLRGenerator::GetElIfEmptySymbol(const std::string& el)
 {
+    std::vector<std::string> result;
 	for (size_t i = 0; i < m_grammar.size(); i++)
 	{
 		for (size_t j = 0; j < m_grammar[i].second.size(); j++)
 		{
 			if (m_grammar[i].second[j] == el)
 			{
-				return m_grammar[i].second[j + 1] + 'R';
+				if (j + 1 == m_grammar[i].second.size())
+				{
+					std::vector<std::string> result1 = GetNextContentAfterLastInLine(m_grammar[i].first);
+
+					result.insert(result.end(), result1.begin(), result1.end());
+				}
+				else
+				{
+					result.emplace_back(m_grammar[i].second[j + 1] + 'R');
+				}
+				break;
 			}
 		}
 	}
 
-	return std::string();
+	return result;
 }
 
 std::string SLRGenerator::GetElFromGrammar(const std::string& nonTerminal)
@@ -330,7 +341,6 @@ std::string SLRGenerator::GetPuttingEl(const std::string& el)
 	return result;
 }
 
-// нужно передавать вектор уже пройденных элементов
 std::vector<std::string> SLRGenerator::GetFirstFollowSet(const std::string& element, std::vector<std::string>& fromWhatElementStarted)
 {
 	std::vector<std::string> res;
@@ -375,9 +385,12 @@ std::vector<std::string> SLRGenerator::GetFirstFollowSet(const std::string& elem
 
 			res.insert(res.end(), result1.begin(), result1.end());*/
 
-			std::string result1 = GetElIfEmptySymbol(element);
-			result1 += std::to_string(i);
-			res.emplace_back(result1);
+			std::vector<std::string> result1 = GetElIfEmptySymbol(element);
+			for (size_t k = 0; k < result1.size(); k++)
+			{
+				result1[k] += std::to_string(i);
+			}
+			res.insert(res.begin(), result1.begin(), result1.end());
 		}
 	}
 

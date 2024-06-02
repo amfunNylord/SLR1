@@ -19,7 +19,7 @@ private:
 	bool IsElAlreadyInTable(const std::string& el);
 	bool IsInVector(const std::string& el, const std::vector<std::string>& vec);
 
-	std::string GetElIfEmptySymbol(const std::string& el);
+	std::vector<std::string> GetElIfEmptySymbol(const std::string& el);
 
 	std::string GetElFromGrammar(const std::string& nonTerminal);
 	std::string GetPuttingEl(const std::string& el);
