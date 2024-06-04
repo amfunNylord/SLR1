@@ -244,6 +244,16 @@ void SLRGenerator::PrintTable(std::ofstream& outputFile)
 	}
 }
 
+std::vector<std::vector<std::string>> SLRGenerator::GetTable() const
+{
+	return m_table;
+}
+
+std::vector<std::pair<std::string, std::vector<std::string>>> SLRGenerator::GetGrammar() const
+{
+	return m_grammar;
+}
+
 bool SLRGenerator::IsElAlreadyInTable(const std::string& el)
 {
 	for (size_t i = 1; i < m_table.size(); i++)
@@ -293,23 +303,6 @@ std::vector<std::string> SLRGenerator::GetElIfEmptySymbol(const std::string& el)
 	}
 
 	return result;
-}
-
-std::string SLRGenerator::GetElFromGrammar(const std::string& nonTerminal)
-{
-	std::string res;
-	
-	size_t i = 0;
-	while (i < nonTerminal.size())
-	{
-		if (isdigit(nonTerminal[i]))
-		{
-			break;
-		}
-		res += nonTerminal[i];
-		i++;
-	}
-	return res;
 }
 
 std::string SLRGenerator::GetPuttingEl(const std::string& el)

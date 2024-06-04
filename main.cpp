@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #include "SLRProgram.h"
+#include <string>
 
 int main(int argc, char* argv[])
 {
@@ -20,17 +21,18 @@ int main(int argc, char* argv[])
 
     // нельзя использовать - терминалы цифры
 
-    //todo: обработку с пустыми символами
+    std::cout << "Enter input symbol chain: ";
+	std::string inputChain;
+	std::getline(std::cin, inputChain);
+
     try 
     {
-        program.Run(inputFile, outputFile);
+        program.Run(inputFile, outputFile, inputChain);
     }
     catch (std::exception& e)
     {
         std::cout << e.what() << std::endl;
     }
-
-    std::cout << "The program is done" << std::endl;
 
     return 0;
 }

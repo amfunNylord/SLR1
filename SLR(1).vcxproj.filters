@@ -19,6 +19,9 @@
     <Filter Include="SLRProgram">
       <UniqueIdentifier>{24fa0b81-832d-4094-b937-faf049441c9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SLRSyntaxParser">
+      <UniqueIdentifier>{92ee2bf5-fdc4-4cc9-bea9-4e411e852306}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -30,6 +33,9 @@
     <ClCompile Include="SLRGenerator.cpp">
       <Filter>SLRGenerator</Filter>
     </ClCompile>
+    <ClCompile Include="SLRSyntaxParser.cpp">
+      <Filter>SLRSyntaxParser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SLRProgram.h">
@@ -40,6 +46,9 @@
     </ClInclude>
     <ClInclude Include="SLRGenerator.h">
       <Filter>SLRGenerator</Filter>
+    </ClInclude>
+    <ClInclude Include="SLRSyntaxParser.h">
+      <Filter>SLRSyntaxParser</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

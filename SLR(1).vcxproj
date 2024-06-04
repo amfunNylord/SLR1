@@ -134,10 +134,12 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SLRGenerator.cpp" />
     <ClCompile Include="SLRProgram.cpp" />
+    <ClCompile Include="SLRSyntaxParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SLRGenerator.h" />
     <ClInclude Include="SLRProgram.h" />
+    <ClInclude Include="SLRSyntaxParser.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

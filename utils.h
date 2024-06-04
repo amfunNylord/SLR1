@@ -20,3 +20,20 @@ inline bool IsNonTerminal(const std::string& el)
 {
 	return (el.size() >= 2 && el[0] == '<' && el[el.size() - 1] == '>');
 }
+
+inline std::string GetElFromGrammar(const std::string& nonTerminal)
+{
+	std::string res;
+
+	size_t i = 0;
+	while (i < nonTerminal.size())
+	{
+		if (isdigit(nonTerminal[i]))
+		{
+			break;
+		}
+		res += nonTerminal[i];
+		i++;
+	}
+	return res;
+}

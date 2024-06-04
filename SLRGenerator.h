@@ -11,6 +11,9 @@ public:
 	void FillTable();
 	void PrintTable(std::ofstream& outputFile);
 
+	std::vector<std::vector<std::string>> GetTable() const;
+	std::vector<std::pair<std::string, std::vector<std::string>>> GetGrammar() const;
+
 private:
 	void AddStartingRule();
 	void AddNewRow();
@@ -21,7 +24,6 @@ private:
 
 	std::vector<std::string> GetElIfEmptySymbol(const std::string& el);
 
-	std::string GetElFromGrammar(const std::string& nonTerminal);
 	std::string GetPuttingEl(const std::string& el);
 	std::vector<std::string> GetFirstFollowSet(const std::string& nonterminal, std::vector<std::string>& fromWhatElementStarted);
 	std::vector<std::string> GetSymbolsFromEl(const std::string& el);
