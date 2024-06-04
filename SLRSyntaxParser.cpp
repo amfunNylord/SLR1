@@ -81,7 +81,6 @@ std::string SLRSyntaxParser::GetConvertChainEl(const std::string& el, const size
 			return m_table[rowNumber][i];
 		}
 	}
-	m_isError = true;
 	return std::string();
 }
 

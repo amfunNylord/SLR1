@@ -18,9 +18,6 @@ private:
 	std::vector<std::vector<std::string>> m_table;
 	std::vector<std::pair<std::string, std::vector<std::string>>> m_grammar;
 
-	bool m_isError = false;
-	bool m_isEnd = false;
-
 	std::stack<std::string> m_stack;
 	std::vector<std::string> m_chain;
 };
