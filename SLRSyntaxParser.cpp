@@ -17,11 +17,23 @@ void SLRSyntaxParser::ParseChain(const std::string& inputChain)
 	{
 		size_t rowNumber = m_stack.empty() ? GetRowOfEl("begin") : GetRowOfEl(m_stack.top());
 	
+		if (m_chain.empty())
+		{
+			std::cout << "ERROR" << std::endl;
+			return;
+		}
+
 		std::string stackEl = GetConvertChainEl(m_chain[0], rowNumber);
 
 		if (stackEl == "ok" && m_stack.empty())
 		{
-			std::cout << "The input program is ok" << std::endl;
+			std::cout << "OK" << std::endl;
+			break;
+		}
+
+		if (stackEl.empty())
+		{
+			std::cout << "ERROR" << std::endl;
 			break;
 		}
 
