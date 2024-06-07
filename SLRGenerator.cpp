@@ -227,6 +227,11 @@ void SLRGenerator::AddNewFilledLine(const std::string& el)
 		{
 			if (m_table[0][j] == el)
 			{
+				if (el == "=")
+				{
+					m_table[m_table.size() - 1][j] += "R0";
+					break;
+				}
 				std::string puttingEl = GetPuttingEl(tableContent[i]);
 				m_table[m_table.size() - 1][j] += puttingEl;
 				break;
@@ -311,6 +316,39 @@ std::vector<std::string> SLRGenerator::GetElIfEmptySymbol(const std::string& el)
 	}
 
 	return result;
+}
+
+std::vector<std::string> SLRGenerator::GetRIfEmptyOptions(const size_t& row, const size_t& column)
+{
+	std::vector<std::string> result;
+
+	if (HasEmptyOption(m_grammar[row].second[column]))
+	{
+		result.emplace_back(m_grammar[row].second[column + 1] + "R");
+		std::vector<std::string> result1 = GetRIfEmptyOptions(row, column + 1);
+		result.insert(result.end(), result1.begin(), result1.end());
+	}
+	else
+	{
+		return result;
+	}
+
+	return result;
+}
+
+bool SLRGenerator::HasEmptyOption(const std::string& el)
+{
+	for (size_t i = 0; i < m_grammar.size(); i++)
+	{
+		if (m_grammar[i].first == GetElFromGrammar(el))
+		{
+			if (GetElFromGrammar(m_grammar[i].second[0]) == "e")
+			{
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 std::string SLRGenerator::GetPuttingEl(const std::string& el)
@@ -469,6 +507,9 @@ std::vector<std::string> SLRGenerator::GetNextContentAfterLastInLine(const std::
 				else
 				{
 					result.emplace_back(m_grammar[i].second[j + 1] + "R");
+
+					std::vector<std::string> result1 = GetRIfEmptyOptions(i, j + 1);
+					result.insert(result.begin(), result1.begin(), result1.end());
 				}
 				break;
 			}

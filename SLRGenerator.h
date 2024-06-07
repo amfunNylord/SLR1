@@ -24,6 +24,10 @@ private:
 
 	std::vector<std::string> GetElIfEmptySymbol(const std::string& el);
 
+	std::vector<std::string> GetRIfEmptyOptions(const size_t& row, const size_t& column);
+
+	bool HasEmptyOption(const std::string& el);
+
 	std::string GetPuttingEl(const std::string& el);
 	std::vector<std::string> GetFirstFollowSet(const std::string& nonterminal, std::vector<std::string>& fromWhatElementStarted);
 	std::vector<std::string> GetTableContent(const std::string& el);

@@ -40,12 +40,10 @@ void SLRSyntaxParser::ParseChain(const std::string& inputChain)
 
 		if (stackEl.empty())
 		{
-			if (IsEmptySymbolBefore(m_chain[0]))
+			if (IsCouldAddNoterminal(rowNumber))
 			{
-				AddEmptySymbolWhichBefore(m_chain[0]);
 				continue;
 			}
-
 			std::cout << "ERROR" << std::endl;
 			break;
 		}
@@ -165,6 +163,19 @@ void SLRSyntaxParser::AddEmptySymbolWhichBefore(const std::string& el)
 	}
 
 	m_chain.insert(m_chain.begin(), GetElFromGrammar(possibleEmptySymbol));
+}
+
+bool SLRSyntaxParser::IsCouldAddNoterminal(const size_t& rowNumber)
+{
+	for (size_t i = 1; i < m_table[rowNumber].size(); i++)
+	{
+		if (!m_table[rowNumber][i].empty() && m_table[rowNumber][i][0] == 'R' && IsNonTerminal(m_table[0][i]))
+		{
+			m_chain.insert(m_chain.begin(), m_table[0][i]);
+			return true;
+		}
+	}
+	return false;
 }
 
 size_t SLRSyntaxParser::GetRowOfEl(const std::string& el)

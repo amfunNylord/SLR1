@@ -16,8 +16,8 @@ private:
 	bool IsEmptySymbolBefore(const std::string& el);
 
 	void AddEmptySymbolWhichBefore(const std::string& el);
-
-	void TryToConvert();
+	
+	bool IsCouldAddNoterminal(const size_t& rowNumber);
 
 	size_t GetRowOfEl(const std::string& el);
 
