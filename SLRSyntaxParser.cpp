@@ -2,6 +2,7 @@
 #include <sstream>
 #include "utils.h"
 #include <iostream>
+#include <algorithm>
 
 SLRSyntaxParser::SLRSyntaxParser(const SLRGenerator& gen)
 {
@@ -13,26 +14,38 @@ void SLRSyntaxParser::ParseChain(const std::string& inputChain)
 {
 	m_chain = GetConvertedChain(inputChain);
 
+	if (m_chain.empty())
+	{
+		std::cout << "ERROR" << std::endl;
+		return;
+	}
+
 	while (true)
 	{
 		size_t rowNumber = m_stack.empty() ? GetRowOfEl("begin") : GetRowOfEl(m_stack.top());
-	
-		if (m_chain.empty())
-		{
-			std::cout << "ERROR" << std::endl;
-			return;
-		}
 
 		std::string stackEl = GetConvertChainEl(m_chain[0], rowNumber);
 
 		if (stackEl == "ok" && m_stack.empty())
 		{
-			std::cout << "OK" << std::endl;
+			if (m_chain[0] == m_grammar[0].first && m_chain[1] == "=" && m_chain.size() == 2)
+			{
+				std::cout << "OK" << std::endl;
+				break;
+			}
+			std::cout << "ERROR" << std::endl;
 			break;
 		}
 
+
 		if (stackEl.empty())
 		{
+			if (IsEmptySymbolBefore(m_chain[0]))
+			{
+				AddEmptySymbolWhichBefore(m_chain[0]);
+				continue;
+			}
+
 			std::cout << "ERROR" << std::endl;
 			break;
 		}
@@ -40,11 +53,6 @@ void SLRSyntaxParser::ParseChain(const std::string& inputChain)
 		if (stackEl[0] == 'R')
 		{
 			size_t ruleNumber = size_t(std::stoi(stackEl.substr(1, stackEl.size() - 1)));
-
-			if (ruleNumber == 0)
-			{
-				m_stack.push("=02");
-			}
 
 			std::string insertingSymbol = m_grammar[ruleNumber].first;
 
@@ -54,11 +62,21 @@ void SLRSyntaxParser::ParseChain(const std::string& inputChain)
 				continue;
 			}
 
-			size_t countOfDeletingItems = m_grammar[ruleNumber].second.size();
-
-			for (size_t k = 0; k < countOfDeletingItems; k++)
+			if (ruleNumber == 0)
 			{
-				m_stack.pop();
+				while (!m_stack.empty())
+				{
+					m_stack.pop();
+				}
+			}
+			else
+			{
+				size_t countOfDeletingItems = m_grammar[ruleNumber].second.size();
+
+				for (size_t k = 0; k < countOfDeletingItems; k++)
+				{
+					m_stack.pop();
+				}
 			}
 
 			m_chain.insert(m_chain.begin(), insertingSymbol);
@@ -94,6 +112,59 @@ std::string SLRSyntaxParser::GetConvertChainEl(const std::string& el, const size
 		}
 	}
 	return std::string();
+}
+
+bool SLRSyntaxParser::IsEmptySymbolBefore(const std::string& el)
+{
+	bool result = false;
+
+	std::string possibleEmptySymbol;
+
+	for (size_t i = 0; i < m_grammar.size(); i++)
+	{
+		for (size_t j = 0; j < m_grammar[i].second.size(); j++)
+		{
+			if (GetElFromGrammar(m_grammar[i].second[j]) == el)
+			{
+				if (j == 0)
+				{
+					return result;
+				}
+				possibleEmptySymbol = m_grammar[i].second[j - 1];
+			}
+		}
+	}
+
+	for (size_t i = 0; i < m_grammar.size(); i++)
+	{
+		if (m_grammar[i].first == GetElFromGrammar(possibleEmptySymbol))
+		{
+			if (GetElFromGrammar(m_grammar[i].second[0]) == "e")
+			{
+				result = true;
+			}
+		}
+	}
+
+	return result;
+}
+
+void SLRSyntaxParser::AddEmptySymbolWhichBefore(const std::string& el)
+{
+	std::string possibleEmptySymbol;
+
+	for (size_t i = 0; i < m_grammar.size(); i++)
+	{
+		for (size_t j = 0; j < m_grammar[i].second.size(); j++)
+		{
+			if (GetElFromGrammar(m_grammar[i].second[j]) == el)
+			{
+				possibleEmptySymbol = m_grammar[i].second[j - 1];
+			}
+		}
+	}
+
+	m_chain.insert(m_chain.begin(), GetElFromGrammar(possibleEmptySymbol));
 }
 
 size_t SLRSyntaxParser::GetRowOfEl(const std::string& el)

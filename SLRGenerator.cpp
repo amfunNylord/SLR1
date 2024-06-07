@@ -410,10 +410,6 @@ std::vector<std::string> SLRGenerator::GetTableContent(const std::string& el)
 			{
 				if (j + 1 == m_grammar[i].second.size())
 				{
-					/*if (m_grammar[i].first == GetElFromGrammar(m_grammar[i].second[j]))
-					{
-						continue;
-					}*/
 					std::vector<std::string> result1 = GetNextContentAfterLastInLine(m_grammar[i].first);
 
 					for (size_t k = 0; k < result1.size(); k++)

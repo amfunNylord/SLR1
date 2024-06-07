@@ -13,6 +13,12 @@ private:
 	std::vector<std::string> GetConvertedChain(const std::string& chain);
 	std::string GetConvertChainEl(const std::string& el, const size_t& rowNumber);
 
+	bool IsEmptySymbolBefore(const std::string& el);
+
+	void AddEmptySymbolWhichBefore(const std::string& el);
+
+	void TryToConvert();
+
 	size_t GetRowOfEl(const std::string& el);
 
 	std::vector<std::vector<std::string>> m_table;
