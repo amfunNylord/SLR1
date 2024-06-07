@@ -26,7 +26,6 @@ private:
 
 	std::string GetPuttingEl(const std::string& el);
 	std::vector<std::string> GetFirstFollowSet(const std::string& nonterminal, std::vector<std::string>& fromWhatElementStarted);
-	std::vector<std::string> GetSymbolsFromEl(const std::string& el);
 	std::vector<std::string> GetTableContent(const std::string& el);
 	std::vector<std::string> GetNextContentAfterLastInLine(const std::string& el);
 

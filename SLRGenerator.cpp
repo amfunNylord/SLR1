@@ -295,7 +295,15 @@ std::vector<std::string> SLRGenerator::GetElIfEmptySymbol(const std::string& el)
 				}
 				else
 				{
-					result.emplace_back(m_grammar[i].second[j + 1] + 'R');
+					std::string temp = m_grammar[i].second[j + 1];
+					if (!IsNonTerminal(GetElFromGrammar(m_grammar[i].second[j + 1])))
+					{
+						temp += "R";
+					}
+					std::vector<std::string> alreadyUsed = { temp };
+					std::vector<std::string> res2 = GetFirstFollowSet(temp, alreadyUsed);
+					result.insert(result.end(), res2.begin(), res2.end());
+					result.emplace_back(temp);
 				}
 				break;
 			}
@@ -365,51 +373,26 @@ std::vector<std::string> SLRGenerator::GetFirstFollowSet(const std::string& elem
 			res.insert(res.end(), res1.begin(), res1.end());
 		}
 		else if (el == "e")
-		{
-			/*std::vector<std::string> result1 = GetNextContentAfterLastInLine(m_grammar[i].first);
+		{	
+			std::vector<std::string> result1 = GetElIfEmptySymbol(element);
 
 			for (size_t k = 0; k < result1.size(); k++)
 			{
 				if (result1[k][result1[k].size() - 1] == 'R')
 				{
-					result1[k] += std::to_string(i);
+					if (result1[k][0] == '=')
+					{
+						result1[k] += '0';
+					}
+					else
+					{
+						result1[k] += std::to_string(i);
+					}
 				}
 			}
 
-			res.insert(res.end(), result1.begin(), result1.end());*/
-
-			std::vector<std::string> result1 = GetElIfEmptySymbol(element);
-			for (size_t k = 0; k < result1.size(); k++)
-			{
-				result1[k] += std::to_string(i);
-			}
 			res.insert(res.begin(), result1.begin(), result1.end());
 		}
-	}
-
-	return res;
-}
-
-std::vector<std::string> SLRGenerator::GetSymbolsFromEl(const std::string& el)
-{
-	std::vector<std::string> res;
-
-	size_t i = 0; 
-	while (i < el.size())
-	{
-		std::string symbol;
-		while (!isdigit(el[i]))
-		{
-			symbol += el[i];
-			i++;
-		}
-		while (isdigit(el[i]) && i < el.size())
-		{
-			symbol += el[i];
-			i++;
-		}
-
-		res.emplace_back(symbol);
 	}
 
 	return res;

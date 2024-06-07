@@ -37,3 +37,28 @@ inline std::string GetElFromGrammar(const std::string& nonTerminal)
 	}
 	return res;
 }
+
+inline std::vector<std::string> GetSymbolsFromEl(const std::string& el)
+{
+	std::vector<std::string> res;
+
+	size_t i = 0;
+	while (i < el.size())
+	{
+		std::string symbol;
+		while (!isdigit(el[i]))
+		{
+			symbol += el[i];
+			i++;
+		}
+		while (isdigit(el[i]) && i < el.size())
+		{
+			symbol += el[i];
+			i++;
+		}
+
+		res.emplace_back(symbol);
+	}
+
+	return res;
+}
