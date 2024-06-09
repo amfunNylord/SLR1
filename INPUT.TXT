@@ -1,7 +1,8 @@
-<S> - <A> <B> <C> =
-<A> - <A> a
-<A> - e
-<B> - <B> b
-<B> - e
-<C> - <C> c
-<C> - e
+<F> - function <I> ( <I> ) <G> end =
+<G> - <I> := <E>
+<G> - <I> := <E> d <G>
+<E> - <E> * <I>
+<E> - <E> + <I>
+<E> - <I>
+<I> - a
+<I> - b

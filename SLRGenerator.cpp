@@ -511,7 +511,6 @@ std::vector<std::string> SLRGenerator::GetNextContentAfterLastInLine(const std::
 					std::vector<std::string> result1 = GetRIfEmptyOptions(i, j + 1);
 					result.insert(result.begin(), result1.begin(), result1.end());
 				}
-				break;
 			}
 		}
 	}
