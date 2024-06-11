@@ -3,6 +3,7 @@
 #include <queue>
 #include "utils.h"
 
+// считываем грамматику и инициализируем стартовые поля таблицы
 SLRGenerator::SLRGenerator(std::ifstream& inputFile)
 {
 	std::string line;
@@ -85,16 +86,19 @@ SLRGenerator::SLRGenerator(std::ifstream& inputFile)
 
 void SLRGenerator::FillTable()
 {
+	// добавляем начальное правило
 	AddStartingRule();
 	std::queue<std::string> q;
 	size_t row = 1;
 	size_t column = 2;
 	while (true)
 	{
+		// проверка на конец алгоритма
 		if (column == m_tableWidth - 1 && row == m_table.size() - 1 && q.empty())
 		{
 			break;
 		}
+		// если очередь пустая, то ищем элемент, для которого будем добавлять строку
 		if (q.empty())
 		{
 			if (!m_table[row][column].empty())
@@ -119,6 +123,7 @@ void SLRGenerator::FillTable()
 		}
 		else
 		{
+			// заполняем строку 
 			std::string el = q.front();
 			q.pop();
 			if (!IsElAlreadyInTable(el))
@@ -324,9 +329,17 @@ std::vector<std::string> SLRGenerator::GetRIfEmptyOptions(const size_t& row, con
 
 	if (HasEmptyOption(m_grammar[row].second[column]))
 	{
-		result.emplace_back(m_grammar[row].second[column + 1] + "R");
-		std::vector<std::string> result1 = GetRIfEmptyOptions(row, column + 1);
-		result.insert(result.end(), result1.begin(), result1.end());
+		if (m_grammar[row].second.size() == column + 1)
+		{
+			std::vector<std::string> result1 = GetNextContentAfterLastInLine(m_grammar[row].first);
+			result.insert(result.end(), result1.begin(), result1.end());
+		}
+		else
+		{
+			result.emplace_back(m_grammar[row].second[column + 1] + "R");
+			std::vector<std::string> result1 = GetRIfEmptyOptions(row, column + 1);
+			result.insert(result.end(), result1.begin(), result1.end());
+		}
 	}
 	else
 	{

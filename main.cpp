@@ -19,8 +19,6 @@ int main(int argc, char* argv[])
 
     SLRProgram program;
 
-    // нельзя использовать - терминалы цифры
-
     std::cout << "Enter input symbol chain: ";
 	std::string inputChain;
 	std::getline(std::cin, inputChain);
